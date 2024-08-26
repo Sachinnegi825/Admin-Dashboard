@@ -68,9 +68,7 @@ const Messages = () => {
 
   // -----------------------------------------Fetching data from getMessageList Api-----------------------------------------------------//
 
-  const fetchMessage = async (start, end, status) =>
-  {
-    
+  const fetchMessage = async (start, end, status) => {
     try {
       setLoading(true);
       const apiResponse = await Apis.GetMessageList(apiUrl, start, end, status);
@@ -79,19 +77,15 @@ const Messages = () => {
         dispatch(addItems(apiResponse?.data));
       }
 
-      if (Number(statusvalue) ===0)
-      {
+      if (Number(statusvalue) === 0) {
         setitems(apiResponse?.data);
       }
-
-    
     } catch (error) {
       console.error("Error fetching messages:", error);
     } finally {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -146,16 +140,13 @@ const Messages = () => {
     setVisitcode("");
     setcarriername("");
     setStatus(0);
-    if(filteredItems2 && filteredItems2.length>0 && statusvalue!=0)
+    if (filteredItems2 && filteredItems2.length > 0 && statusvalue != 0)
       setFilteredItems([...filteredItems2].sort((a, b) => a.id - b.id));
-    
-    else
-      setFilteredItems([...items2].sort((a, b) => a.id - b.id));
-
+    else setFilteredItems([...items2].sort((a, b) => a.id - b.id));
   };
 
   const handleFiltermessage = () => {
-    console.log("filter",filteredItems2)
+    console.log("filter", filteredItems2);
     let filteredData = filteredItems2 ? filteredItems2 : items;
 
     if (visitcode !== "") {
@@ -190,7 +181,7 @@ const Messages = () => {
       );
     }
 
-    console.log("FILTERDA",filteredData)
+    console.log("FILTERDA", filteredData);
     setFilteredItems([...filteredData].sort((a, b) => a.id - b.id));
   };
 
@@ -255,6 +246,7 @@ const Messages = () => {
 
   const handleReprocess = async (id, status_code) => {
     try {
+      setLoading(true);
       const data = await Apis.ProcessMessage(apiUrl, id, status_code);
 
       if (data?.success === true) {
@@ -409,7 +401,7 @@ const Messages = () => {
                           <option value="">Select Cargo Code</option>
                           {ccode &&
                             ccode?.length > 0 &&
-                            ccode?.map((itm,i) => (
+                            ccode?.map((itm, i) => (
                               <option key={i}>{itm}</option>
                             ))}
                         </select>

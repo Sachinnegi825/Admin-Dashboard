@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExportExcel from "./Excelexport";
 import { useSelector, useDispatch } from "react-redux";
 import Apis from "../Services/ApiServices/Apis";
@@ -10,75 +10,70 @@ import moment from "moment";
 import Footer from "./Footer";
 import { useApiUrl } from "./Context/ApiUrlContext";
 
-
 const Dashboard = () => {
   const hidden = useSelector((state) => state.hiddenstate.hidden);
   const items = useSelector((state) => state.Items.items);
   const { apiUrl, setApiUrl } = useApiUrl();
-  
-
 
   const get8HoursBefore = () => {
     const currentTime = moment();
-    const eightHoursBefore = currentTime.subtract(8, 'hours');
-    const formattedTime = eightHoursBefore.format('YYYY-MM-DDTHH:mm');
+    const eightHoursBefore = currentTime.subtract(8, "hours");
+    const formattedTime = eightHoursBefore.format("YYYY-MM-DDTHH:mm");
     return formattedTime;
-};
-
+  };
 
   useEffect(() => {
     document.title = "DP World DAR | Dashboard";
   }, []);
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(
-   get8HoursBefore()
-  );
+  const [startDate, setStartDate] = useState(get8HoursBefore());
   const [endDate, setEndDate] = useState(
-    moment(new Date(), 'ddd MMM DD YYYY HH:mm:ss [GMT]Z').format('YYYY-MM-DDTHH:mm')
+    moment(new Date(), "ddd MMM DD YYYY HH:mm:ss [GMT]Z").format(
+      "YYYY-MM-DDTHH:mm"
+    )
   );
   const [statusValue, setStatusValue] = useState(0);
 
- 
   const formatDate2 = (dateString) => {
     const parsedTime = moment(dateString);
     const formattedTime = parsedTime.format("YYYY-MM-DD HH:mm");
     return formattedTime;
   };
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
+  // useEffect(() => {
+  //   const token = sessionStorage.getItem("token");
 
-    if (token) {
-      fetchMessage(formatDate2(startDate), formatDate2(endDate));
-    } else {
-      window.location.href = "/";
-    }
-  }, [startDate, endDate, statusValue]);
+  //   if (token) {
+  //     fetchMessage(formatDate2(startDate), formatDate2(endDate));
+  //   } else {
+  //     window.location.href = "/";
+  //   }
+  // }, [startDate, endDate, statusValue]);
 
   const fetchMessage = async (start, end) => {
     try {
-      const apiResponse = await Apis.GetMessageList(
-        apiUrl,
-        start,
-        end
-      );
+      const apiResponse = await Apis.GetMessageList(apiUrl, start, end);
       dispatch(addItems(apiResponse?.data));
-      
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
-
-
   const handleRemoveFilter = () => {
     setStatusValue("");
-    setStartDate(moment(new Date(), 'ddd MMM DD YYYY HH:mm:ss [GMT]Z').format('YYYY-MM-DDTHH:mm'));
-    setEndDate(moment(new Date(), 'ddd MMM DD YYYY HH:mm:ss [GMT]Z').format('YYYY-MM-DDTHH:mm'));
+    setStartDate(
+      moment(new Date(), "ddd MMM DD YYYY HH:mm:ss [GMT]Z").format(
+        "YYYY-MM-DDTHH:mm"
+      )
+    );
+    setEndDate(
+      moment(new Date(), "ddd MMM DD YYYY HH:mm:ss [GMT]Z").format(
+        "YYYY-MM-DDTHH:mm"
+      )
+    );
   };
 
   return (
-   
     <div className="wrapper">
       <Header />
       <Sidebar />
@@ -131,7 +126,10 @@ const Dashboard = () => {
                               type="datetime-local"
                               value={startDate}
                               min="2023-01-01"
-                              max={moment(new Date(), 'ddd MMM DD YYYY HH:mm:ss [GMT]Z').format('YYYY-MM-DDTHH:mm')}
+                              max={moment(
+                                new Date(),
+                                "ddd MMM DD YYYY HH:mm:ss [GMT]Z"
+                              ).format("YYYY-MM-DDTHH:mm")}
                               onChange={(e) => setStartDate(e.target.value)}
                             />
                           </div>
@@ -150,7 +148,10 @@ const Dashboard = () => {
                               className="form-control form-control-sm datetimepicker-input date-pick"
                               type="datetime-local"
                               min="2023-01-01"
-                              max={moment(new Date(), 'ddd MMM DD YYYY HH:mm:ss [GMT]Z').format('YYYY-MM-DDTHH:mm')}
+                              max={moment(
+                                new Date(),
+                                "ddd MMM DD YYYY HH:mm:ss [GMT]Z"
+                              ).format("YYYY-MM-DDTHH:mm")}
                               value={endDate}
                               onChange={(e) => setEndDate(e.target.value)}
                             />
@@ -158,7 +159,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                  
+
                     <div className="row mt-3 mb-2">
                       <div className="col-md-3 col-5">
                         <button
@@ -176,8 +177,8 @@ const Dashboard = () => {
                       />
                     </div>
                   </div>
-                
-                  {(
+
+                  {
                     <div className="col-md-5">
                       <div className="card">
                         <div className="card-body">
@@ -185,18 +186,16 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                  )}
+                  }
                 </div>
               </div>
             </div>
           </div>
         </section>
-       
       </div>
       <aside className="control-sidebar control-sidebar-dark"></aside>
-      <Footer/>
+      <Footer />
     </div>
-
   );
 };
 
